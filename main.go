@@ -11,9 +11,8 @@ import (
 func main() {
 	c := cal.NewBusinessCalendar()
 	c.AddHoliday(cz.Holidays...)
-	zacatek := input("Enter date in format 12.4.2024: \n")
-	t := time.Time(zacatek)
-	t.AddDate()
+	t := inputdate("Enter date in format 12.4.2024: \n")
+	print(t)
 }
 
 func doruceni() []*cal.Holiday {
@@ -21,8 +20,11 @@ func doruceni() []*cal.Holiday {
 	return holidays
 }
 
-func input(input string) {
-
+func inputdate(prompt string) time.Time {
+	var d, m, y int
+	fmt.Print(prompt)
+	fmt.Scanf("%d.%d.%d", &d, &m, &y)
+	return time.Date(y, time.Month(m), d, 0, 0, 0, 0, time.UTC)
 }
 
 func print(input ...any) {
