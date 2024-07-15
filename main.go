@@ -12,7 +12,7 @@ func main() {
 	c := cal.NewBusinessCalendar()
 	c.AddHoliday(cz.Holidays...)
 	t := inputdate("Enter date in format 12.4.2024: \n")
-	print(t)
+	var delta int = input("Enter number of days to add: ", int)
 }
 
 func doruceni() []*cal.Holiday {
@@ -25,6 +25,13 @@ func inputdate(prompt string) time.Time {
 	fmt.Print(prompt)
 	fmt.Scanf("%d.%d.%d", &d, &m, &y)
 	return time.Date(y, time.Month(m), d, 0, 0, 0, 0, time.UTC)
+}
+
+func input(prompt string) any {
+	var input any
+	fmt.Print(prompt)
+	fmt.Scan(&input)
+	return input
 }
 
 func print(input ...any) {
