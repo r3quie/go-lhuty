@@ -9,18 +9,8 @@ import (
 )
 
 func main() {
-	date := inputtime("Enter date in format 12.4.2024: \n")
-	var delta int
-	for {
-		print("Enter number of days: ")
-		_, err := fmt.Scan(&delta)
-		//print(delta, "je delta\n", err, "je err")
-		if err != nil {
-			fmt.Println("Invalid input")
-			continue
-		}
-		break
-	}
+	date := input_time("Enter date in format 12.4.2024: \n")
+	delta := input_int("Enter number of days: \n")
 	print(doruceni(date, delta))
 }
 
@@ -40,11 +30,25 @@ func doruceni(inputdate time.Time, inputdelta int) string {
 	return f("Konec lhuty měl být %d.%d.%d, ale kvuli svátku nebo víkendu bude až %d.%d.%d", before_konec.Day(), before_konec.Month(), before_konec.Year(), konec.Day(), konec.Month(), konec.Year())
 }
 
-func inputtime(prompt string) time.Time {
+func input_time(prompt string) time.Time {
 	var d, m, y int
 	fmt.Print(prompt)
 	fmt.Scanf("%d.%d.%d", &d, &m, &y)
 	return time.Date(y, time.Month(m), d, 0, 0, 0, 0, time.UTC)
+}
+
+func input_int(prompt string) int {
+	var i int
+	fmt.Print(prompt)
+	for {
+		_, err := fmt.Scanf("\n%d", &i)
+		if err != nil {
+			fmt.Println("Invalid input: ", err)
+			continue
+		}
+		break
+	}
+	return i
 }
 
 func print(input ...any) {
