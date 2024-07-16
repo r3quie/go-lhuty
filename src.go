@@ -14,10 +14,10 @@ import (
 	print(doruceni(date, delta))
 }*/
 
-func doruceni(inputdate time.Time, inputdelta int) string {
+func doruceni(date time.Time, delta int) string {
 	c := cal.NewBusinessCalendar()
 	c.AddHoliday(cz.Holidays...)
-	konec := inputdate.AddDate(0, 0, inputdelta)
+	konec := date.AddDate(0, 0, delta)
 	var before_konec time.Time = konec
 	posunuto := false
 	for !c.IsWorkday(konec) {
