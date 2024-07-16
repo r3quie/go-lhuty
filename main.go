@@ -9,6 +9,31 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
+/*
+	type base struct {
+		listeners sync.Map // map[DataListener]bool
+
+		lock sync.RWMutex
+	}
+
+	type Doruceni interface {
+		binding.DataItem
+		Get() (string, error)
+		Set(string) error
+	}
+
+	type stringToDoruceni struct {
+		base
+		format string
+		from   string
+	}
+
+	func StringToDoruceni(str String) binding.String {
+		v := &stringToDoruceni{from: str}
+		str.binding.AddListener(v)
+		return v
+	}
+*/
 func main() {
 	a := app.New()
 	w := a.NewWindow("Kalkulačka lhůt")
@@ -27,10 +52,10 @@ func main() {
 
 	dnu := widget.NewEntryWithData(dnustr)
 
-	workv, _ := zacatekstr.Get()
-	workdnu, _ := dnustr.Get()
+	//workv, _ := zacatekstr.Get()
+	//workdnu, _ := dnustr.Get()
 
-	vysledekstr.Set(doruceni(string_to_time(workv), string_to_int(workdnu)))
+	vysledekstr.Set(doruceni(string_to_time(zacatekstr), string_to_int(workdnu)))
 
 	vysledek := widget.NewLabelWithData(vysledekstr)
 
@@ -40,10 +65,9 @@ func main() {
 		zacatek,
 		dnu,
 		vysledek,
-		/*widget.NewButton("Spočítat", func() {
-			vysledek.SetText(doruceni(string_to_time(zacatek.Text), string_to_int(dnu.Text)))
-		}*/
 	))
+
+	w.ShowAndRun()
 
 	w.ShowAndRun()
 }
