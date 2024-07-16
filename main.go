@@ -11,14 +11,27 @@ import (
 func main() {
 	a := app.New()
 	w := a.NewWindow("Kalkulačka lhůt")
+	dnes := time.Now()
 
 	title := widget.NewLabel("Kalkulačka lhůt")
-	test := widget.NewLabel("12.4.2024")
+	test := widget.NewLabel("Zadejte datum a počet dní")
+
+	zacatek := widget.NewEntry()
+	zacatek.SetPlaceHolder(f("%d.%d.%d", dnes.Day(), dnes.Month(), dnes.Year()))
+
+	dnu := widget.NewEntry()
+	dnu.SetPlaceHolder("8")
+
+	vysledek := widget.NewLabel("")
+
 	w.SetContent(container.NewVBox(
 		title,
 		test,
+		zacatek,
+		dnu,
+		vysledek,
 		widget.NewButton("Spočítat", func() {
-			test.SetText(doruceni(time.Now(), 5))
+			vysledek.SetText(doruceni(string_to_time(zacatek.Text), string_to_int(dnu.Text)))
 		}),
 	))
 

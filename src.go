@@ -42,6 +42,18 @@ func doruceni(date time.Time, delta int) string {
 	return time.Date(y, time.Month(m), d, 0, 0, 0, 0, time.UTC)
 }*/
 
+func string_to_time(input string) time.Time {
+	var d, m, y int
+	fmt.Sscanf(input, "%d.%d.%d", &d, &m, &y)
+	return time.Date(y, time.Month(m), d, 0, 0, 0, 0, time.UTC)
+}
+
+func string_to_int(input string) int {
+	var i int
+	fmt.Sscanf(input, "%d", &i)
+	return i
+}
+
 func convert_weekday(input time.Weekday) string {
 	switch input {
 	case 0:
