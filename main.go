@@ -42,6 +42,10 @@ func main() {
 	zacatekstr := binding.NewString()
 	zacatekstr.Set(f("%d.%d.%d", dnes.Day(), dnes.Month(), dnes.Year()))
 	dnustr := binding.NewString()
+	sadasd := binding.FloatToStringWithFormat(0, "%.0f")
+	int1 := binding.NewInt()
+	int1.Set(0)
+	asdadsdd := binding.IntToString(int1)
 	dnustr.Set("8")
 	vysledekstr := binding.NewString()
 
@@ -49,13 +53,13 @@ func main() {
 	test := widget.NewLabel("Zadejte datum a počet dní")
 
 	zacatek := widget.NewEntryWithData(zacatekstr)
-
 	dnu := widget.NewEntryWithData(dnustr)
 
 	//workv, _ := zacatekstr.Get()
 	//workdnu, _ := dnustr.Get()
 
-	vysledekstr.Set(doruceni(string_to_time(zacatekstr), string_to_int(workdnu)))
+	b, _ := dnustr.Get()
+	vysledekstr.Set(doruceni(string_to_time(a), string_to_int(b)))
 
 	vysledek := widget.NewLabelWithData(vysledekstr)
 
@@ -66,8 +70,6 @@ func main() {
 		dnu,
 		vysledek,
 	))
-
-	w.ShowAndRun()
 
 	w.ShowAndRun()
 }
