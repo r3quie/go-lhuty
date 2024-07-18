@@ -5,7 +5,6 @@ import (
 
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/widget"
 )
 
@@ -34,34 +33,24 @@ import (
 		return v
 	}
 */
+
 func main() {
 	a := app.New()
 	w := a.NewWindow("Kalkulačka lhůt")
 	dnes := time.Now()
 
-	zacatekstr := binding.NewString()
-	zacatekstr.Set(f("%d.%d.%d", dnes.Day(), dnes.Month(), dnes.Year()))
-	dnustr := binding.NewString()
-	sadasd := binding.FloatToStringWithFormat(0, "%.0f")
-	int1 := binding.NewInt()
-	int1.Set(0)
-	asdadsdd := binding.IntToString(int1)
-	dnustr.Set("8")
-	vysledekstr := binding.NewString()
-
 	title := widget.NewLabel("Kalkulačka lhůt")
 	test := widget.NewLabel("Zadejte datum a počet dní")
 
-	zacatek := widget.NewEntryWithData(zacatekstr)
-	dnu := widget.NewEntryWithData(dnustr)
+	zacatek := widget.NewEntry()
+	zacatek.PlaceHolder = f("%d.%d.%d", dnes.Day(), dnes.Month(), dnes.Year())
+	dnu := widget.NewEntry()
+	dnu.PlaceHolder = "8"
 
 	//workv, _ := zacatekstr.Get()
 	//workdnu, _ := dnustr.Get()
 
-	b, _ := dnustr.Get()
-	vysledekstr.Set(doruceni(string_to_time(a), string_to_int(b)))
-
-	vysledek := widget.NewLabelWithData(vysledekstr)
+	vysledek := widget.NewLabel(doruceni(dnes, 8))
 
 	w.SetContent(container.NewVBox(
 		title,
@@ -70,6 +59,13 @@ func main() {
 		dnu,
 		vysledek,
 	))
+
+	dnu.OnChanged = func(s string) {
+		vysledek.SetText(doruceni(string_to_time(zacatek.Text), string_to_int(s)))
+	}
+	zacatek.OnChanged = func(ss string) {
+		vysledek.SetText(doruceni(string_to_time(ss), string_to_int(dnu.Text)))
+	}
 
 	w.ShowAndRun()
 }
