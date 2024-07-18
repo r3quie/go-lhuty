@@ -8,18 +8,14 @@ import (
 	"github.com/rickar/cal/v2/cz"
 )
 
-/*func main() {
-	date := input_time("Enter date in format 12.4.2024: \n")
-	delta := input_int("Enter number of days: \n")
-	print(doruceni(date, delta))
-}*/
+const dateformat string = "%d.%d.%d"
 
-var dateformat string = "%d.%d.%d"
-
+// returns formatted date in format "day.month.year"
 func strformat(x time.Time) string {
 	return f(dateformat, x.Day(), x.Month(), x.Year())
 }
 
+// returns string with date + delta days, if it's a holiday or weekend, it returns the next workday
 func doruceni(date time.Time, delta int) string {
 	c := cal.NewBusinessCalendar()
 	c.AddHoliday(cz.Holidays...)
@@ -60,25 +56,21 @@ func doruceni(date time.Time, delta int) string {
 	return f("Konec lhůty měl být %s (%s), ale kvůli %s bude až \n%s (%s)", strformat(before_konec), weekday_before_konec, svatek_or_vikend, strformat(konec), convert_weekday(konec.Weekday()))
 }
 
-/*func input_time(prompt string) time.Time {
-	var d, m, y int
-	fmt.Print(prompt)
-	fmt.Scanf("%d.%d.%d", &d, &m, &y)
-	return time.Date(y, time.Month(m), d, 0, 0, 0, 0, time.UTC)
-}*/
-
+// converts string in format "day.month.year" to time.Time
 func string_to_time(input string) time.Time {
 	var d, m, y int
 	fmt.Sscanf(input, "%d.%d.%d", &d, &m, &y)
 	return time.Date(y, time.Month(m), d, 0, 0, 0, 0, time.UTC)
 }
 
+// converts string to int using fmt.Sscanf
 func string_to_int(input string) int {
 	var i int
 	fmt.Sscanf(input, "%d", &i)
 	return i
 }
 
+// converts time.Weekday to string in Czech
 func convert_weekday(input time.Weekday) string {
 	switch input {
 	case 0:
@@ -99,40 +91,7 @@ func convert_weekday(input time.Weekday) string {
 	return ""
 }
 
-/*func input_int(prompt string) int {
-	var i int
-	fmt.Print(prompt)
-	for {
-		_, err := fmt.Scanf("\n%d", &i)
-		if err != nil {
-			fmt.Println("Invalid input: ", err)
-			continue
-		}
-		break
-	}
-	return i
-}
-
-func print(input ...any) {
-	fmt.Println(input...)
-}
-*/
-/* func printf(inputstr string, input ...any) {
-	fmt.Printf(inputstr+"\n", input...)
-} */
-
+// returns formatted, literally just fmt.Sprintf
 func f(inputstr string, input ...any) string {
 	return fmt.Sprintf(inputstr, input...)
 }
-
-/* func sortarr(input ...any) {
-	if f("%T", input[0]) == "[]int" {
-		sort.Ints(input[0].([]int))
-	} else if f("%T", input[0]) == "[]float64" {
-		sort.Float64s(input[0].([]float64))
-	} else if f("%T", input[0]) == "[]string" {
-		sort.Strings(input[0].([]string))
-	} else {
-		fmt.Println("Invalid input type")
-	}
-} */

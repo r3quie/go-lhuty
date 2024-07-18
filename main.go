@@ -8,32 +8,6 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-/*
-	type base struct {
-		listeners sync.Map // map[DataListener]bool
-
-		lock sync.RWMutex
-	}
-
-	type Doruceni interface {
-		binding.DataItem
-		Get() (string, error)
-		Set(string) error
-	}
-
-	type stringToDoruceni struct {
-		base
-		format string
-		from   string
-	}
-
-	func StringToDoruceni(str String) binding.String {
-		v := &stringToDoruceni{from: str}
-		str.binding.AddListener(v)
-		return v
-	}
-*/
-
 func main() {
 	a := app.New()
 	w := a.NewWindow("Kalkulačka lhůt")
@@ -46,9 +20,6 @@ func main() {
 	zacatek.PlaceHolder = strformat(dnes)
 	dnu := widget.NewEntry()
 	dnu.PlaceHolder = "8"
-
-	//workv, _ := zacatekstr.Get()
-	//workdnu, _ := dnustr.Get()
 
 	vysledek := widget.NewLabel(doruceni(dnes, 8))
 
