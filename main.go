@@ -43,7 +43,7 @@ func main() {
 	test := widget.NewLabel("Zadejte datum a počet dní")
 
 	zacatek := widget.NewEntry()
-	zacatek.PlaceHolder = f("%d.%d.%d", dnes.Day(), dnes.Month(), dnes.Year())
+	zacatek.PlaceHolder = strformat(dnes)
 	dnu := widget.NewEntry()
 	dnu.PlaceHolder = "8"
 

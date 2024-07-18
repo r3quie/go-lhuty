@@ -14,6 +14,12 @@ import (
 	print(doruceni(date, delta))
 }*/
 
+var dateformat string = "%d.%d.%d"
+
+func strformat(x time.Time) string {
+	return f(dateformat, x.Day(), x.Month(), x.Year())
+}
+
 func doruceni(date time.Time, delta int) string {
 	c := cal.NewBusinessCalendar()
 	c.AddHoliday(cz.Holidays...)
@@ -51,7 +57,7 @@ func doruceni(date time.Time, delta int) string {
 	if svatek && vikend {
 		svatek_or_vikend += "a víkendu"
 	}
-	return f("Konec lhůty měl být %d.%d.%d (%s), ale kvůli %s bude až \n%d.%d.%d (%s)", before_konec.Day(), before_konec.Month(), before_konec.Year(), weekday_before_konec, svatek_or_vikend, konec.Day(), konec.Month(), konec.Year(), convert_weekday(konec.Weekday()))
+	return f("Konec lhůty měl být %s (%s), ale kvůli %s bude až \n%s (%s)", strformat(before_konec), weekday_before_konec, svatek_or_vikend, strformat(konec), convert_weekday(konec.Weekday()))
 }
 
 /*func input_time(prompt string) time.Time {
