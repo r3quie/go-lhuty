@@ -19,15 +19,26 @@ func strformat(x time.Time) string {
 func doruceni(date time.Time, delta int) string {
 	c := cal.NewBusinessCalendar()
 	c.AddHoliday(cz.Holidays...)
+
+	if delta == 0 && c.IsWorkday(date) {
+		return f("Konec lhůty bude %s (%s)", strformat(date), convert_weekday(date.Weekday()))
+	}
+
 	konec := date.AddDate(0, 0, delta)
+
 	var before_konec time.Time = konec
+
 	posunuto := false
 	svatek := false
 	vikend := false
+
 	svatek_or_vikend := ""
+
 	for !c.IsWorkday(konec) {
 		posunuto = true
+
 		h, _, n := c.IsHoliday(konec)
+
 		if h && svatek {
 			svatek_or_vikend += f("a svátku '%s' ", n.Name)
 		} else if h {
@@ -37,13 +48,17 @@ func doruceni(date time.Time, delta int) string {
 		if konec.Weekday() == 0 || konec.Weekday() == 6 {
 			vikend = true
 		}
+
 		konec = konec.AddDate(0, 0, 1)
 	}
+
 	if !posunuto {
-		return f("Konec lhůty bude %d.%d.%d (%s)", konec.Day(), konec.Month(), konec.Year(), convert_weekday(konec.Weekday()))
+		return f("Konec lhůty bude %s (%s)", strformat(konec), convert_weekday(konec.Weekday()))
 	}
+
 	weekday_before_konec := convert_weekday(before_konec.Weekday())
 	is_holiday, _, name_of_holiday := c.IsHoliday(before_konec)
+
 	if is_holiday {
 		weekday_before_konec += f(", %s", name_of_holiday.Name)
 	}
