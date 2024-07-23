@@ -16,12 +16,20 @@ func strformat(x time.Time) string {
 }
 
 // returns string with date + delta days, if it's a holiday or weekend, it returns the next workday
-func doruceni(date time.Time, delta int) string {
+func doruceni(date time.Time, delta int, value bool) string {
 	c := cal.NewBusinessCalendar()
 	c.AddHoliday(cz.Holidays...)
+	var bude string = ""
 
 	if delta == 0 && c.IsWorkday(date) {
-		return f("Konec lhůty bude %s (%s)", strformat(date), convert_weekday(date.Weekday()))
+		if time.Since(date) > 0 {
+			bude = "byl"
+		}
+		bude = "bude"
+		if value {
+			return f("Konec lhůty %s \n%s (%s)\nA právní moci na%s %s", bude, strformat(date), convert_weekday(date.Weekday()), bude, strformat(date.AddDate(0, 0, 1)))
+		}
+		return f("Konec lhůty %s \n%s (%s)", bude, strformat(date), convert_weekday(date.Weekday()))
 	}
 
 	konec := date.AddDate(0, 0, delta)
@@ -51,11 +59,14 @@ func doruceni(date time.Time, delta int) string {
 
 		konec = konec.AddDate(0, 0, 1)
 	}
-	bude := "bude"
+	bude = "bude"
 	if time.Since(konec) > 0 {
 		bude = "byl"
 	}
 	if !posunuto {
+		if value {
+			return f("Konec lhůty %s \n%s (%s)\nA právní moci na%s %s", bude, strformat(konec), convert_weekday(konec.Weekday()), bude, strformat(konec.AddDate(0, 0, 1)))
+		}
 		return f("Konec lhůty %s \n%s (%s)", bude, strformat(konec), convert_weekday(konec.Weekday()))
 	}
 
@@ -71,7 +82,9 @@ func doruceni(date time.Time, delta int) string {
 	if svatek && vikend {
 		svatek_or_vikend += "a víkendu"
 	}
-
+	if value {
+		return f("Konec lhůty měl být %s (%s), ale kvůli %s %s až \n%s (%s)\nA právní moci na%s %s", strformat(before_konec), weekday_before_konec, svatek_or_vikend, bude, strformat(konec), convert_weekday(konec.Weekday()), bude, strformat(konec.AddDate(0, 0, 1)))
+	}
 	return f("Konec lhůty měl být %s (%s), ale kvůli %s %s až \n%s (%s)", strformat(before_konec), weekday_before_konec, svatek_or_vikend, bude, strformat(konec), convert_weekday(konec.Weekday()))
 }
 

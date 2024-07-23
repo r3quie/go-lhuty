@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"time"
 
 	"fyne.io/fyne/v2"
@@ -10,19 +9,20 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func update_pravnimoc(value bool, pravmoc *widget.Label, zacatek *widget.Entry, dnu *widget.Entry) {
-	if value {
-		var konec string
-		var kil string
-		var kil2 string
-		fmt.Sscanf(doruceni(string_to_time(zacatek.Text), string_to_int(dnu.Text)), "%v\n%v (%v)", &kil, &konec, &kil2)
-		pravmoc.SetText("Nabude právní moci dne\n" + strformat(string_to_time(konec).AddDate(0, 0, 1)))
+/*
+	func update_pravnimoc(value bool, pravmoc *widget.Label, zacatek *widget.Entry, dnu *widget.Entry) {
+		if value {
+			var konec string
+			var kil string
+			var kil2 string
+			fmt.Sscanf(doruceni(string_to_time(zacatek.Text), string_to_int(dnu.Text)), "%v\n%v (%v)", &kil, &konec, &kil2)
+			pravmoc.SetText("Nabude právní moci dne\n" + strformat(string_to_time(konec).AddDate(0, 0, 1)))
+		}
+		if !value {
+			pravmoc.SetText("")
+		}
 	}
-	if !value {
-		pravmoc.SetText("")
-	}
-}
-
+*/
 func main() {
 	a := app.New()
 	w := a.NewWindow("Kalkulačka lhůt")
@@ -37,10 +37,10 @@ func main() {
 	dnu := widget.NewEntry()
 	dnu.PlaceHolder = "8"
 
-	vysledek := widget.NewLabel(doruceni(dnes, 8))
-	pravnimocLabel := widget.NewLabel("")
+	vysledek := widget.NewLabel(doruceni(dnes, 8, false))
+
 	pravnimoc := widget.NewCheck("Vypočítat právní moc", func(value bool) {
-		update_pravnimoc(value, pravnimocLabel, zacatek, dnu)
+		vysledek.SetText(doruceni(string_to_time(zacatek.Text), string_to_int(dnu.Text), value))
 	})
 
 	w.SetContent(container.NewVBox(
@@ -51,21 +51,15 @@ func main() {
 		dnu,
 		vysledek,
 		pravnimoc,
-		pravnimocLabel,
 	))
 
 	w.Resize(fyne.NewSize(600, 200))
 
 	dnu.OnChanged = func(s string) {
-		vysledek.SetText(doruceni(string_to_time(zacatek.Text), string_to_int(s)))
-		update_pravnimoc(pravnimoc.Checked, pravnimocLabel, zacatek, dnu)
+		vysledek.SetText(doruceni(string_to_time(zacatek.Text), string_to_int(s), pravnimoc.Checked))
 	}
 	zacatek.OnChanged = func(ss string) {
-		vysledek.SetText(doruceni(string_to_time(ss), string_to_int(dnu.Text)))
-		update_pravnimoc(pravnimoc.Checked, pravnimocLabel, zacatek, dnu)
-	}
-	pravnimoc.OnChanged = func(value bool) {
-		update_pravnimoc(value, pravnimocLabel, zacatek, dnu)
+		vysledek.SetText(doruceni(string_to_time(ss), string_to_int(dnu.Text), pravnimoc.Checked))
 	}
 
 	w.ShowAndRun()
