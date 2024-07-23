@@ -51,9 +51,12 @@ func doruceni(date time.Time, delta int) string {
 
 		konec = konec.AddDate(0, 0, 1)
 	}
-
+	bude := "bude"
+	if time.Since(konec) > 0 {
+		bude = "byl"
+	}
 	if !posunuto {
-		return f("Konec lhůty bude %s (%s)", strformat(konec), convert_weekday(konec.Weekday()))
+		return f("Konec lhůty %s \n%s (%s)", bude, strformat(konec), convert_weekday(konec.Weekday()))
 	}
 
 	weekday_before_konec := convert_weekday(before_konec.Weekday())
@@ -68,7 +71,8 @@ func doruceni(date time.Time, delta int) string {
 	if svatek && vikend {
 		svatek_or_vikend += "a víkendu"
 	}
-	return f("Konec lhůty měl být %s (%s), ale kvůli %s bude až \n%s (%s)", strformat(before_konec), weekday_before_konec, svatek_or_vikend, strformat(konec), convert_weekday(konec.Weekday()))
+
+	return f("Konec lhůty měl být %s (%s), ale kvůli %s %s až \n%s (%s)", strformat(before_konec), weekday_before_konec, svatek_or_vikend, bude, strformat(konec), convert_weekday(konec.Weekday()))
 }
 
 // converts string in format "day.month.year" to time.Time
