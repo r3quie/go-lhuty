@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/rickar/cal/v2"
@@ -18,7 +19,9 @@ func doruceni(date time.Time, delta int, value bool) string {
 	c := cal.NewBusinessCalendar()
 	c.AddHoliday(cz.Holidays...)
 	var bude string
-
+	if delta < 0 {
+		delta = -delta
+	}
 	if delta == 0 && c.IsWorkday(date) {
 		if time.Since(date) > 0 {
 			bude = "byl"
@@ -29,9 +32,11 @@ func doruceni(date time.Time, delta int, value bool) string {
 		}
 
 		if value {
-			return f("Konec lhůty %s \n%s (%s)\nA právní moci na%s %s", bude, strformat(date), convert_weekday(date.Weekday()), bude, strformat(date.AddDate(0, 0, 1)))
+			return f("Konec lhůty %s \n%s (%s)\nA právní moci na%s %s",
+				bude, strformat(date), convert_weekday(date.Weekday()), bude, strformat(date.AddDate(0, 0, 1)))
 		}
-		return f("Konec lhůty %s \n%s (%s)", bude, strformat(date), convert_weekday(date.Weekday()))
+		return f("Konec lhůty %s \n%s (%s)",
+			bude, strformat(date), convert_weekday(date.Weekday()))
 	}
 
 	konec := date.AddDate(0, 0, delta)
@@ -67,15 +72,17 @@ func doruceni(date time.Time, delta int, value bool) string {
 	}
 	if !posunuto {
 		if value {
-			return f("Konec lhůty %s \n%s (%s)\nA právní moci na%s %s", bude, strformat(konec), convert_weekday(konec.Weekday()), bude, strformat(konec.AddDate(0, 0, 1)))
+			return f("Konec lhůty %s \n%s (%s)\nA právní moci na%s %s",
+				bude, strformat(konec), convert_weekday(konec.Weekday()), bude, strformat(konec.AddDate(0, 0, 1)))
 		}
-		return f("Konec lhůty %s \n%s (%s)", bude, strformat(konec), convert_weekday(konec.Weekday()))
+		return f("Konec lhůty %s \n%s (%s)",
+			bude, strformat(konec), convert_weekday(konec.Weekday()))
 	}
 
 	weekday_before_konec := convert_weekday(before_konec.Weekday())
-	is_holiday, _, name_of_holiday := c.IsHoliday(before_konec)
+	is_before_holiday, _, name_of_holiday := c.IsHoliday(before_konec)
 
-	if is_holiday {
+	if is_before_holiday {
 		weekday_before_konec += f(", %s", name_of_holiday.Name)
 	}
 	if !svatek {
@@ -85,9 +92,11 @@ func doruceni(date time.Time, delta int, value bool) string {
 		svatek_or_vikend += "a víkendu"
 	}
 	if value {
-		return f("Konec lhůty měl být %s (%s), ale kvůli %s %s až \n%s (%s)\nA právní moci na%s %s", strformat(before_konec), weekday_before_konec, svatek_or_vikend, bude, strformat(konec), convert_weekday(konec.Weekday()), bude, strformat(konec.AddDate(0, 0, 1)))
+		return f("Konec lhůty měl být %s (%s), ale kvůli %s %s až \n%s (%s)\nA právní moci na%s %s",
+			strformat(before_konec), weekday_before_konec, svatek_or_vikend, bude, strformat(konec), convert_weekday(konec.Weekday()), bude, strformat(konec.AddDate(0, 0, 1)))
 	}
-	return f("Konec lhůty měl být %s (%s), ale kvůli %s %s až \n%s (%s)", strformat(before_konec), weekday_before_konec, svatek_or_vikend, bude, strformat(konec), convert_weekday(konec.Weekday()))
+	return f("Konec lhůty měl být %s (%s), ale kvůli %s %s až \n%s (%s)",
+		strformat(before_konec), weekday_before_konec, svatek_or_vikend, bude, strformat(konec), convert_weekday(konec.Weekday()))
 }
 
 // converts string in format "day.month.year" to time.Time
@@ -96,10 +105,12 @@ func string_to_time(input string) time.Time {
 	return date
 }
 
-// converts string to int using fmt.Sscanf
+// converts string to int using Atoi, if fails, returns 0
 func string_to_int(input string) int {
-	var i int
-	fmt.Sscanf(input, "%d", &i)
+	i, err := strconv.Atoi(input)
+	if err != nil {
+		return 0
+	}
 	return i
 }
 
