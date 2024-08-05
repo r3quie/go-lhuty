@@ -9,11 +9,6 @@ import (
 	"github.com/rickar/cal/v2/cz"
 )
 
-// returns formatted date in format "day.month.year"
-func strformat(x time.Time) string {
-	return x.Format("2.1.2006")
-}
-
 // returns string with date + delta days, if it's a holiday or weekend, it returns the next workday
 func doruceni(date time.Time, delta int, value bool) string {
 	c := cal.NewBusinessCalendar()
@@ -33,10 +28,10 @@ func doruceni(date time.Time, delta int, value bool) string {
 
 		if value {
 			return f("Konec lhůty %s \n%s (%s)\nA právní moci na%s %s",
-				bude, strformat(date), convert_weekday(date.Weekday()), bude, strformat(date.AddDate(0, 0, 1)))
+				bude, timeInFormat(date), convert_weekday(date.Weekday()), bude, timeInFormat(date.AddDate(0, 0, 1)))
 		}
 		return f("Konec lhůty %s \n%s (%s)",
-			bude, strformat(date), convert_weekday(date.Weekday()))
+			bude, timeInFormat(date), convert_weekday(date.Weekday()))
 	}
 
 	konec := date.AddDate(0, 0, delta)
@@ -73,10 +68,10 @@ func doruceni(date time.Time, delta int, value bool) string {
 	if !posunuto {
 		if value {
 			return f("Konec lhůty %s \n%s (%s)\nA právní moci na%s %s",
-				bude, strformat(konec), convert_weekday(konec.Weekday()), bude, strformat(konec.AddDate(0, 0, 1)))
+				bude, timeInFormat(konec), convert_weekday(konec.Weekday()), bude, timeInFormat(konec.AddDate(0, 0, 1)))
 		}
 		return f("Konec lhůty %s \n%s (%s)",
-			bude, strformat(konec), convert_weekday(konec.Weekday()))
+			bude, timeInFormat(konec), convert_weekday(konec.Weekday()))
 	}
 
 	weekday_before_konec := convert_weekday(before_konec.Weekday())
@@ -93,15 +88,18 @@ func doruceni(date time.Time, delta int, value bool) string {
 	}
 	if value {
 		return f("Konec lhůty měl být %s (%s), ale kvůli %s %s až \n%s (%s)\nA právní moci na%s %s",
-			strformat(before_konec), weekday_before_konec, svatek_or_vikend, bude, strformat(konec), convert_weekday(konec.Weekday()), bude, strformat(konec.AddDate(0, 0, 1)))
+			timeInFormat(before_konec), weekday_before_konec, svatek_or_vikend, bude, timeInFormat(konec), convert_weekday(konec.Weekday()), bude, timeInFormat(konec.AddDate(0, 0, 1)))
 	}
 	return f("Konec lhůty měl být %s (%s), ale kvůli %s %s až \n%s (%s)",
-		strformat(before_konec), weekday_before_konec, svatek_or_vikend, bude, strformat(konec), convert_weekday(konec.Weekday()))
+		timeInFormat(before_konec), weekday_before_konec, svatek_or_vikend, bude, timeInFormat(konec), convert_weekday(konec.Weekday()))
 }
 
-// converts string in format "day.month.year" to time.Time
+// converts string in format "day.month.year" (2.1.2006) to time.Time
 func string_to_time(input string) time.Time {
-	date, _ := time.Parse("2.1.2006", input)
+	date, err := time.Parse("2.1.2006", input)
+	if err != nil {
+		return time.Now()
+	}
 	return date
 }
 
@@ -114,10 +112,15 @@ func string_to_int(input string) int {
 	return i
 }
 
-// converts time.Weekday to string in Czech
+// converts time.Weekday to corresponding string in Czech
 func convert_weekday(weekday time.Weekday) string {
 	weekdays := [7]string{"Neděle", "Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek", "Sobota"}
 	return weekdays[weekday]
+}
+
+// returns formatted date in format "day.month.year" (2.1.2006) from time.Time
+func timeInFormat(x time.Time) string {
+	return x.Format("2.1.2006")
 }
 
 // returns formatted, literally just fmt.Sprintf

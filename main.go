@@ -33,7 +33,7 @@ func main() {
 	labeldelta := widget.NewLabel("Zadejte počet dnů")
 
 	zacatek := widget.NewEntry()
-	zacatek.PlaceHolder = strformat(dnes)
+	zacatek.PlaceHolder = timeInFormat(dnes)
 	dnu := widget.NewEntry()
 	dnu.PlaceHolder = "8"
 
