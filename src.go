@@ -24,8 +24,12 @@ func doruceni(date time.Time, delta int, value bool) string {
 	if delta == 0 && c.IsWorkday(date) {
 		if time.Since(date) > 0 {
 			bude = "byl"
+		} else if time.Since(date) < 0 {
+			bude = "bude"
+		} else if time.Since(date) == 0 {
+			bude = "je dnes,"
 		}
-		bude = "bude"
+
 		if value {
 			return f("Konec lhůty %s \n%s (%s)\nA právní moci na%s %s", bude, strformat(date), convert_weekday(date.Weekday()), bude, strformat(date.AddDate(0, 0, 1)))
 		}
