@@ -36,13 +36,13 @@ func doruceni(date time.Time, delta int, value bool) string {
 
 	konec := date.AddDate(0, 0, delta)
 
-	var before_konec time.Time = konec
+	before_konec := konec
 
 	posunuto := false
 	svatek := false
 	vikend := false
 
-	svatek_or_vikend := ""
+	var svatek_or_vikend string
 
 	for !c.IsWorkday(konec) {
 		posunuto = true
