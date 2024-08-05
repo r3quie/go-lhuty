@@ -12,16 +12,9 @@ import (
 func strformat(x time.Time) string {
 	return x.Format("2.1.2006")
 }
-func timer(name string) func() {
-	start := time.Now()
-	return func() {
-		fmt.Printf("%s took %v\n", name, time.Since(start))
-	}
-}
 
 // returns string with date + delta days, if it's a holiday or weekend, it returns the next workday
 func doruceni(date time.Time, delta int, value bool) string {
-	defer timer("main")()
 	c := cal.NewBusinessCalendar()
 	c.AddHoliday(cz.Holidays...)
 	var bude string
@@ -99,9 +92,8 @@ func doruceni(date time.Time, delta int, value bool) string {
 
 // converts string in format "day.month.year" to time.Time
 func string_to_time(input string) time.Time {
-	var d, m, y int
-	fmt.Sscanf(input, "%d.%d.%d", &d, &m, &y)
-	return time.Date(y, time.Month(m), d, 0, 0, 0, 0, time.UTC)
+	date, _ := time.Parse("2.1.2006", input)
+	return date
 }
 
 // converts string to int using fmt.Sscanf
@@ -113,7 +105,7 @@ func string_to_int(input string) int {
 
 // converts time.Weekday to string in Czech
 func convert_weekday(weekday time.Weekday) string {
-	weekdays := []string{"Neděle", "Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek", "Sobota"}
+	weekdays := [7]string{"Neděle", "Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek", "Sobota"}
 	return weekdays[weekday]
 }
 
