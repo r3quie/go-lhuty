@@ -8,18 +8,23 @@ import (
 	"github.com/rickar/cal/v2/cz"
 )
 
-const dateformat string = "%d.%d.%d"
-
 // returns formatted date in format "day.month.year"
 func strformat(x time.Time) string {
-	return f(dateformat, x.Day(), x.Month(), x.Year())
+	return x.Format("2.1.2006")
+}
+func timer(name string) func() {
+	start := time.Now()
+	return func() {
+		fmt.Printf("%s took %v\n", name, time.Since(start))
+	}
 }
 
 // returns string with date + delta days, if it's a holiday or weekend, it returns the next workday
 func doruceni(date time.Time, delta int, value bool) string {
+	defer timer("main")()
 	c := cal.NewBusinessCalendar()
 	c.AddHoliday(cz.Holidays...)
-	var bude string = ""
+	var bude string
 
 	if delta == 0 && c.IsWorkday(date) {
 		if time.Since(date) > 0 {
@@ -107,24 +112,9 @@ func string_to_int(input string) int {
 }
 
 // converts time.Weekday to string in Czech
-func convert_weekday(input time.Weekday) string {
-	switch input {
-	case 0:
-		return "Neděle"
-	case 1:
-		return "Pondělí"
-	case 2:
-		return "Úterý"
-	case 3:
-		return "Středa"
-	case 4:
-		return "Čtvrtek"
-	case 5:
-		return "Pátek"
-	case 6:
-		return "Sobota"
-	}
-	return ""
+func convert_weekday(weekday time.Weekday) string {
+	weekdays := []string{"Neděle", "Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek", "Sobota"}
+	return weekdays[weekday]
 }
 
 // returns formatted, literally just fmt.Sprintf
