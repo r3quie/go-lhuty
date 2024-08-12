@@ -27,10 +27,10 @@ func doruceni(date time.Time, delta int, value bool) string {
 		}
 
 		if value {
-			return f("Konec lhůty %s \n%s (%s)\nA právní moci na%s %s",
+			return f("Poslední den lhůty %s \n%s (%s)\nA právní moci na%s %s",
 				bude, timeInFormat(date), convert_weekday(date.Weekday()), bude, timeInFormat(date.AddDate(0, 0, 1)))
 		}
-		return f("Konec lhůty %s \n%s (%s)",
+		return f("Poslední den lhůty %s \n%s (%s)",
 			bude, timeInFormat(date), convert_weekday(date.Weekday()))
 	}
 
@@ -67,10 +67,10 @@ func doruceni(date time.Time, delta int, value bool) string {
 	}
 	if !posunuto {
 		if value {
-			return f("Konec lhůty %s \n%s (%s)\nA právní moci na%s %s",
+			return f("Poslední den lhůty %s \n%s (%s)\nA právní moci na%s %s",
 				bude, timeInFormat(konec), convert_weekday(konec.Weekday()), bude, timeInFormat(konec.AddDate(0, 0, 1)))
 		}
-		return f("Konec lhůty %s \n%s (%s)",
+		return f("Poslední den lhůty %s \n%s (%s)",
 			bude, timeInFormat(konec), convert_weekday(konec.Weekday()))
 	}
 
@@ -87,10 +87,10 @@ func doruceni(date time.Time, delta int, value bool) string {
 		svatek_or_vikend += "a víkendu"
 	}
 	if value {
-		return f("Konec lhůty měl být %s (%s), ale kvůli %s %s až \n%s (%s)\nA právní moci na%s %s",
+		return f("Poslední den lhůty měl být %s (%s), ale kvůli %s %s až \n%s (%s)\nA právní moci na%s %s",
 			timeInFormat(before_konec), weekday_before_konec, svatek_or_vikend, bude, timeInFormat(konec), convert_weekday(konec.Weekday()), bude, timeInFormat(konec.AddDate(0, 0, 1)))
 	}
-	return f("Konec lhůty měl být %s (%s), ale kvůli %s %s až \n%s (%s)",
+	return f("Poslední den lhůty měl být %s (%s), ale kvůli %s %s až \n%s (%s)",
 		timeInFormat(before_konec), weekday_before_konec, svatek_or_vikend, bude, timeInFormat(konec), convert_weekday(konec.Weekday()))
 }
 
